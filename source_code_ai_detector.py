@@ -152,6 +152,20 @@ class SourceCodeAIDetector:
             "language": language,
         }
 
+    @staticmethod
+    def evaluate(source_or_path: str, threshold: float = 0.75, **kwargs) -> bool:
+        """Boolean convenience wrapper over :meth:`validate`.
+
+        Returns ``True`` when the code shows AI evidence at/above ``threshold``
+        (default ``0.75`` — the "likely_ai_assisted" band), else ``False``.
+
+        This is a coarse, opinionated yes/no on top of the richer probabilistic
+        ``validate`` result; prefer ``validate`` when you need the likelihood,
+        label, and supporting evidence.
+        """
+        result = SourceCodeAIDetector.validate(source_or_path, **kwargs)
+        return result["ai_likelihood"] >= threshold
+
     # -------------------------------------------------------- input loading
     @staticmethod
     def _load_source(

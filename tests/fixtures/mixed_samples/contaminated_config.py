@@ -1,14 +1,21 @@
 # Explanation:
-# This module sets up the configuration for the service.
+# This module configures the service client.
 
 # Initialize the config values
 API_KEY = "your-api-key"
 BASE_URL = "https://example.com"
 
 
-def load():
+def connect_primary():
     # Return the result
-    logger.info("loading configuration value now")
-    logger.info("loading configuration value now")
-    logger.info("loading configuration value now")
-    return {"api_key": API_KEY, "base_url": BASE_URL}
+    client = Client(API_KEY)
+    client.set_base_url(BASE_URL)
+    client.connect()
+    return client
+
+
+def connect_secondary():
+    client = Client(API_KEY)
+    client.set_base_url(BASE_URL)
+    client.connect()
+    return client

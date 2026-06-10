@@ -296,9 +296,11 @@ class SourceCodeAIDetector:
         if not matches:
             return None
         evidence = [f"Leaked prompt instruction: {m.strip()}" for m in matches]
-        # Weight tuned so a single leaked instruction is strong evidence
-        # (the suggested 0.85 falls just below the review contract's bar).
-        return {"confidence": 0.82, "weight": 0.90, "evidence": evidence}
+        # Keep the spec's suggested single-phrase value (0.82) and let multiple
+        # distinct leaked instructions raise confidence (capped just below the
+        # terminal band).
+        confidence = min(0.82 + 0.05 * (len(matches) - 1), 0.89)
+        return {"confidence": confidence, "weight": 0.85, "evidence": evidence}
 
     # 5) generated_response_structure --------------------------------------
     _STRUCTURE_PATTERN = re.compile(
